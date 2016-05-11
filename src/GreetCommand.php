@@ -80,7 +80,7 @@ class GreetCommand extends Command
                         echo $makes->name . "\n";
                     };
 
-                    $text = 'Here you have a list of ' . $json->makesCount . ' vehicles models makes in year " '.$year.' " ';
+                    $text = 'Here you have a list of ' . $json->makesCount . ' vehicles models makes in year "'.$year.'" ';
 
                 } else {
                     $text = 'Please insert a valid "year" to get a list of vehicles. Year should be a four-digit number.';

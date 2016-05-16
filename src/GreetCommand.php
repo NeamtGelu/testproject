@@ -3,8 +3,6 @@
 namespace Gelu;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
@@ -16,40 +14,7 @@ class GreetCommand extends Command
     {
         $this
             ->setName('car:option')
-
-            ->setDescription('Cars operation :')
-//            ->addArgument(
-//                'option',
-//                InputArgument::OPTIONAL,
-//                'What do you want to greet?'
-//            )
-//            ->addArgument(
-//                'type',
-//                InputArgument::OPTIONAL,
-//                'What do you want to search?'
-//            )
-//            ->addArgument(
-//                'year',
-//                InputArgument::OPTIONAL
-//            )
-//            ->addArgument(
-//                'vin',
-//                InputArgument::OPTIONAL,
-//                'Get Vehicle Details by VIN?'
-//            )
-//            ->addArgument(
-//                'make',
-//                InputArgument::OPTIONAL,
-//                'Get All Car Models by a Car Make and Year?'
-//            )
-//
-//            ->addOption(
-//                'yell',
-//                null,
-//                InputOption::VALUE_NONE,
-//                'Please select what type of operation do you want ?'
-//            )
-        ;
+            ->setDescription('Cars operation :');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -69,11 +34,9 @@ class GreetCommand extends Command
 
         $var = $question->getChoices();
 
-        $choise_key = array_search($choise, $var);
+        $choiseKey = array_search($choise, $var);
 
-//        $output->writeln('You have just selected: '.$choise_key);
-
-        switch($choise_key){
+        switch ($choiseKey) {
             case '0':
                 $question = new Question('Please insert "year" to get a list of vehicles models makes in selected year.'."\n");
 
@@ -169,24 +132,24 @@ class GreetCommand extends Command
 
                 if ($year !='') {
 
-                    $url_type = "https://api.edmunds.com/api/vehicle/v2/{$nickname}/models?year={$year}&view=basic&fmt=json&api_key=y2zqcuv5n9cnm4d2g8yw6p9w";
+                    $urlType = "https://api.edmunds.com/api/vehicle/v2/{$nickname}/models?year={$year}&view=basic&fmt=json&api_key=y2zqcuv5n9cnm4d2g8yw6p9w";
 
-                    $text_type = 'Here you have a list of car models for car nickname: "' . $nickname . '" make in year "' . $year . '" :';
+                    $textType = 'Here you have a list of car models for car nickname: "' . $nickname . '" make in year "' . $year . '" :';
 
-                    $text_error = 'No results for make vehicle "'.$nickname.'" make in year "' . $year . '" !';
+                    $textError = 'No results for make vehicle "'.$nickname.'" make in year "' . $year . '" !';
 
                 } else {
 
-                    $url_type = "https://api.edmunds.com/api/vehicle/v2/{$nickname}/models?view=basic&fmt=json&api_key=y2zqcuv5n9cnm4d2g8yw6p9w";
+                    $urlType = "https://api.edmunds.com/api/vehicle/v2/{$nickname}/models?view=basic&fmt=json&api_key=y2zqcuv5n9cnm4d2g8yw6p9w";
 
-                    $text_type = 'Here you have a list of car models for car nickname: "' . $nickname . '" ';
+                    $textType = 'Here you have a list of car models for car nickname: "' . $nickname . '" ';
 
-                    $text_error = 'No results for make vehicle "'.$nickname.'" !';
+                    $textError = 'No results for make vehicle "'.$nickname.'" !';
 
                 }
                 $cSession = curl_init();
 
-                $url = $url_type;
+                $url = $urlType;
                 curl_setopt($cSession, CURLOPT_URL, $url);
                 curl_setopt($cSession, CURLOPT_RETURNTRANSFER, true);
 
@@ -195,25 +158,25 @@ class GreetCommand extends Command
 
                 curl_close($cSession);
 
-                $list_vehicles = '';
+                $listVehicles = '';
 
                 if (!empty($json->models)) {
 
                     foreach ($json->models as $models) {
 
-                        foreach ($models->years as $years_list) {
+                        foreach ($models->years as $yearsList) {
 
-                            foreach ($years_list->styles as $style) {
+                            foreach ($yearsList->styles as $style) {
 
-                                $list_vehicles .= "\n " . $nickname . " -> " . $models->name . " -> " . $years_list->year . " -> " . $style->name;
+                                $listVehicles .= "\n " . $nickname . " -> " . $models->name . " -> " . $yearsList->year . " -> " . $style->name;
                             }
                         }
                     };
 
-                    $text = $list_vehicles . "\n" . $text_type;
+                    $text = $listVehicles . "\n" . $textType;
                 }
                 else{
-                    $text = "\n" . $text_error;
+                    $text = "\n" . $textError;
                 }
 
                 $output->writeln($text);

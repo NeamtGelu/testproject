@@ -2,10 +2,10 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-use Gelu\GreetCommand;
+use Gelu\Vehicle;
 use Symfony\Component\Console\Application;
 
-$command = new GreetCommand();
+$command = new Vehicle();
 
 $application = new Application();
 $application->add($command);
